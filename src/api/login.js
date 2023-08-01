@@ -1,24 +1,22 @@
-import axios from 'axios'
+import axios from '../utils/request'
 
 /*
  * 获取验证码图片
+ * @param {*} sid 唯一标识
  */
-const getCode = async () => {
-  let result = ''
-  try {
-    result = await axios.get('/getCaptcha')
-    if (result.status === 200) {
-      const obj = result.data
-      if (obj.code === 200) {
-        return obj.data
-      }
+const getCode = async (sid) => {
+  const res = await axios.get('/public/getCaptcha', {
+    params: {
+      sid
     }
-  } catch (e) {
-    console.log(e)
-  }
-  return result
+  })
+  return res.data
 }
 
+/*
+ * 找回密码
+ * @param {} option 用户信息（邮箱、验证码）
+ */
 const forget = async (option) => {
   let result = ''
   try {
@@ -34,4 +32,14 @@ const forget = async (option) => {
   return result
 }
 
-export { getCode, forget }
+/*
+ * 登录
+ * @param {*} loginInfo 用户登录信息（邮箱、密码、验证码）
+ */
+const login = (loginInfo) => {
+  return axios.post('/login/login', {
+    ...loginInfo
+  })
+}
+
+export { getCode, forget, login }

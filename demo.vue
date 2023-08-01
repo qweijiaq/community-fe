@@ -19,9 +19,9 @@ const form = reactive({
  * 获取验证码图片
  */
 const getCaptcha = () => {
-  axios.get('http://localhost:3000/getCaptcha').then((res) => {
+  axios.get('http://localhost:3333/getCaptcha').then((res) => {
     if (res.status === 200) {
-      let obj = res.data
+      const obj = res.data
       if (obj.code === 200) {
         params.svg = obj.data
       }

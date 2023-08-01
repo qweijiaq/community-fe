@@ -63,8 +63,8 @@
 
 <script setup>
 import { onMounted, reactive } from 'vue'
-import { defineRule, Form, Field, ErrorMessage } from 'vee-validate'
-import { getCode, forget } from '@/api/login'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import { getCode, forget } from '../api/login'
 
 const params = reactive({
   svg: ''
@@ -81,17 +81,6 @@ const _getCode = async () => {
 
 onMounted(() => {
   _getCode()
-})
-
-// 自定义校验规则
-defineRule('checkEmail', (value) => {
-  if (!value || !value.trim().length) {
-    return '邮箱不能为空'
-  }
-  if (!/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}/.test(value)) {
-    return '请输入一个合法的邮箱'
-  }
-  return true
 })
 
 const submit = async () => {

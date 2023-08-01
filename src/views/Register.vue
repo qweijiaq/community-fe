@@ -130,8 +130,8 @@
 
 <script setup>
 import { onMounted, reactive } from 'vue'
-import { defineRule, Form, Field, ErrorMessage } from 'vee-validate'
-import { getCode } from '@/api/login'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import { getCode } from '../api/login'
 
 const params = reactive({
   svg: ''
@@ -151,44 +151,6 @@ const _getCode = async () => {
 
 onMounted(() => {
   _getCode()
-})
-
-/*
- * 登录验证
- */
-// 自定义校验规则
-defineRule('checkEmail', (value) => {
-  if (!value || !value.trim().length) {
-    return '邮箱不能为空'
-  }
-  if (!/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}/.test(value)) {
-    return '请输入一个合法的邮箱'
-  }
-  return true
-})
-
-defineRule('checkNickname', (value) => {
-  if (!value || !value.trim().length) {
-    return '昵称不能为空'
-  }
-  return true
-})
-
-defineRule('checkPassword', (value) => {
-  if (!value || !value.trim().length) {
-    return '密码不能为空'
-  }
-  if (value.trim().length < 6) {
-    return '密码长度必须至少6个字符'
-  }
-  return true
-})
-
-defineRule('checkRePassword', (value) => {
-  if (!value || !value.trim().length) {
-    return '密码不能为空'
-  }
-  return true
 })
 </script>
 
