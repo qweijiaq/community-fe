@@ -34,7 +34,7 @@
                     <Field
                       type="password"
                       v-model="form.password"
-                      name="checkPassword"
+                      name="checkRePassword"
                       lay-verify="required"
                       placeholder="请输入密码"
                       autocomplete="off"
@@ -42,8 +42,8 @@
                     />
                   </div>
                   <div class="layui-form-mid">
-                    <div v-if="errors.checkPassword" style="color: #c00">
-                      {{ errors.checkPassword }}
+                    <div v-if="errors.checkRePassword" style="color: #c00">
+                      {{ errors.checkRePassword }}
                     </div>
                   </div>
                 </div>
@@ -103,11 +103,11 @@ import { Form, Field } from 'vee-validate'
 import { getCode, login } from '@/api/login'
 import { v4 as uuidv4 } from 'uuid'
 import { useSidStore } from '@/store'
-import { checkEmail, checkPassword, checkCode } from '@/utils/veevalidate'
+import { checkEmail, checkRePassword, checkCode } from '@/utils/veevalidate'
 
 const schema = {
   checkEmail,
-  checkPassword,
+  checkRePassword,
   checkCode
 }
 

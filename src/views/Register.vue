@@ -11,22 +11,21 @@
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0">
           <div class="layui-tab-item layui-show">
             <div class="layui-form layui-form-pane">
-              <Form method="post">
+              <Form :validation-schema="schema" ref="formCom" v-slot="{ errors }">
                 <div class="layui-form-item">
                   <label class="layui-form-label">邮箱</label>
                   <div class="layui-input-inline">
                     <Field
                       type="text"
-                      name="email"
+                      name="checkEmail"
                       v-model.trim="form.email"
-                      rules="checkEmail"
                       placeholder="请输入邮箱"
                       autocomplete="off"
                       class="layui-input"
                     />
                   </div>
                   <div class="layui-form-mid">
-                    <ErrorMessage name="email" style="color: #c00" />
+                    <div v-if="errors.checkEmail" style="color: #c00">{{ errors.checkEmail }}</div>
                   </div>
                   <div class="layui-form-mid" style="color: #9b9898">将成为您的唯一登入名</div>
                 </div>
@@ -34,17 +33,19 @@
                   <label class="layui-form-label">昵称</label>
                   <div class="layui-input-inline">
                     <Field
-                      type="text"
-                      name="nickname"
-                      v-model.trim="form.nickname"
-                      rules="checkNickname"
+                      type="nickname"
+                      v-model="form.nickname"
+                      name="checkNickname"
+                      lay-verify="required"
                       placeholder="请输入昵称"
                       autocomplete="off"
                       class="layui-input"
                     />
                   </div>
                   <div class="layui-form-mid">
-                    <ErrorMessage name="nickname" style="color: #c00" />
+                    <div v-if="errors.checkNickname" style="color: #c00">
+                      {{ errors.checkNickname }}
+                    </div>
                   </div>
                 </div>
                 <div class="layui-form-item">
@@ -52,9 +53,8 @@
                   <div class="layui-input-inline">
                     <Field
                       type="password"
-                      name="password"
                       v-model="form.password"
-                      rules="checkPassword"
+                      name="checkPassword"
                       lay-verify="required"
                       placeholder="请输入密码"
                       autocomplete="off"
@@ -62,18 +62,18 @@
                     />
                   </div>
                   <div class="layui-form-mid">
-                    <ErrorMessage name="password" style="color: #c00" />
+                    <div v-if="errors.checkPassword" style="color: #c00">
+                      {{ errors.checkPassword }}
+                    </div>
                   </div>
-                  <div class="layui-form-mid" style="color: #9b9898">密码至少为6个字符</div>
                 </div>
                 <div class="layui-form-item">
-                  <label class="layui-form-label">确认密码</label>
+                  <label class="layui-form-label">密码</label>
                   <div class="layui-input-inline">
                     <Field
                       type="password"
-                      name="repassword"
-                      v-model="form.repassword"
-                      rules="checkRePassword"
+                      v-model="form.rePassword"
+                      name="checkRePassword"
                       lay-verify="required"
                       placeholder="请确认密码"
                       autocomplete="off"
@@ -81,7 +81,9 @@
                     />
                   </div>
                   <div class="layui-form-mid">
-                    <ErrorMessage name="repassword" style="color: #c00" />
+                    <div v-if="errors.checkRePassword" style="color: #c00">
+                      {{ errors.checkRePassword }}
+                    </div>
                   </div>
                 </div>
                 <div class="layui-form-item">
@@ -89,7 +91,7 @@
                   <div class="layui-input-inline">
                     <Field
                       type="text"
-                      name="code"
+                      name="checkCode"
                       v-model="form.code"
                       lay-verify="required"
                       placeholder="请输入验证码"
@@ -97,12 +99,15 @@
                       class="layui-input"
                     />
                   </div>
+                  <div class="layui-form-mid">
+                    <div v-if="errors.checkCode" style="color: #c00">{{ errors.checkCode }}</div>
+                  </div>
                   <div>
-                    <span class="svg" @click="_getCode" v-html="params.svg"></span>
+                    <span class="svg" @click="() => _getCode(store.sid)" v-html="params.svg"></span>
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-filter="*" lay-submit>立即注册</button>
+                  <button class="layui-btn" type="button" @click="submit">立即注册</button>
                 </div>
                 <div class="layui-form-item fly-form-app">
                   <span>或者直接使用社交账号快捷注册</span>
@@ -129,9 +134,27 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import { getCode } from '@/api/login'
+import { v4 as uuidv4 } from 'uuid'
+import { useSidStore } from '@/store'
+
+import {
+  checkEmail,
+  checkNickname,
+  checkPassword,
+  checkCode,
+  checkRePassword
+} from '@/utils/veevalidate'
+
+const schema = {
+  checkEmail,
+  checkNickname,
+  checkPassword,
+  checkRePassword,
+  checkCode
+}
 
 const params = reactive({
   svg: ''
@@ -145,13 +168,37 @@ const form = reactive({
   code: ''
 })
 
-const _getCode = async () => {
-  params.svg = await getCode()
+const _getCode = async (sid) => {
+  params.svg = await getCode(sid)
 }
 
+const store = useSidStore()
 onMounted(() => {
-  _getCode()
+  if (localStorage.getItem('sid')) {
+    store.sid = JSON.parse(localStorage.getItem('sid')).sid
+  } else {
+    console.log('uuid: ', uuidv4())
+    store.sid = uuidv4()
+  }
+
+  _getCode(store.sid)
 })
+
+const formCom = ref(null)
+
+const submit = async () => {
+  const valid = await formCom.value.validate()
+  if (!valid.valid) return
+  const res = await login({
+    email: form.email,
+    password: form.password,
+    code: form.code,
+    sid: store.sid
+  })
+  if (res.code === 200) {
+    console.log(res)
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>
