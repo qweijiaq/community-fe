@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <Head></Head>
+    <gc-head></gc-head>
     <router-view></router-view>
-    <Foot></Foot>
+    <gc-foot></gc-foot>
   </div>
 </template>
 
 <script setup>
-import Head from '@/components/Head.vue'
-import Foot from '@/components/Foot.vue'
+import GcHead from '@/components/Head.vue'
+import GcFoot from '@/components/Foot.vue'
 </script>
 
 <style>
