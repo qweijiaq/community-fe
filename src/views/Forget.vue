@@ -64,7 +64,7 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { Form, Field, ErrorMessage } from 'vee-validate'
-import { getCode, forget } from '../api/login'
+import { getCode, forget } from '@/api/login'
 
 const params = reactive({
   svg: ''

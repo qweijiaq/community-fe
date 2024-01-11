@@ -1,4 +1,4 @@
-import axios from '../utils/request'
+import axios from '@/utils/request'
 
 /*
  * 获取验证码图片

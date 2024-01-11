@@ -1,7 +1,7 @@
 // 封装axios的请求，返回重新封装的数据格式
 // 对错误的统一处理
 import axios from 'axios'
-import errorHandle from './errorHandle'
+import errorHandle from '@/utils/errorHandle'
 
 class HttpRequest {
   constructor(baseUrl) {

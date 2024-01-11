@@ -100,10 +100,10 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import { Form, Field } from 'vee-validate'
-import { getCode, login } from '../api/login'
+import { getCode, login } from '@/api/login'
 import { v4 as uuidv4 } from 'uuid'
-import { useSidStore } from '../store/index'
-import { checkEmail, checkPassword, checkCode } from '../utils/veevalidate'
+import { useSidStore } from '@/store'
+import { checkEmail, checkPassword, checkCode } from '@/utils/veevalidate'
 
 const schema = {
   checkEmail,

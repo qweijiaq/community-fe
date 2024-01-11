@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import Head from './components/Head.vue'
-import Foot from './components/Foot.vue'
+import Head from '@/components/Head.vue'
+import Foot from '@/components/Foot.vue'
 </script>
 
 <style>
